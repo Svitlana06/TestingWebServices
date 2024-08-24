@@ -1,95 +1,38 @@
-const fetch = require('node-fetch');
 const { expect } = require('chai');
-require('dotenv').config();
+const { createBoard, getBoard, updateBoard, deleteBoard } = require('../services/api');
+const { boardName, boardNameUpdated, dataFormat, jsonDataFormat, nameProperty, idProperty } = require('../config/data');
 
-const apiKey = process.env.TRELLO_API_KEY;
-const token = process.env.TRELLO_TOKEN;
-
-// Функція створення дошки
-const createBoard = async (boardName) => {
-  const url = `https://api.trello.com/1/boards/?name=${encodeURIComponent(boardName)}&key=${apiKey}&token=${token}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });
-  const data = await response.json();
-  return { status: response.status, headers: response.headers, data };
-};
-
-// Функція отримання дошки
-const getBoard = async (boardId) => {
-  const url = `https://api.trello.com/1/boards/${boardId}?key=${apiKey}&token=${token}`;
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
-  const data = await response.json();
-  return { status: response.status, headers: response.headers, data };
-};
-
-// Функція оновлення дошки
-const updateBoard = async (boardId, boardName) => {
-  const url = `https://api.trello.com/1/boards/${boardId}?name=${encodeURIComponent(boardName)}&key=${apiKey}&token=${token}`;
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });
-  const data = await response.json();
-  return { status: response.status, headers: response.headers, data };
-};
-
-// Функція видалення дошки
-const deleteBoard = async (boardId) => {
-  const url = `https://api.trello.com/1/boards/${boardId}?key=${apiKey}&token=${token}`;
-  const response = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
-  return { status: response.status };
-};
-
-// Тести
-describe('Trello API Tests', function() {
+describe('Trello Tests API', function () {
   let boardId;
 
-  it('повинен створити дошку', async function() {
-    const response = await createBoard('Тестова дошка');
+  it('Creating a board', async function () {
+    const response = await createBoard(boardName);
     boardId = response.data.id;
 
     expect(response.status).to.equal(200);
-    expect(response.headers.get('content-type')).to.include('application/json');
-    expect(response.data).to.have.property('name', 'Тестова дошка');
-    expect(response.data).to.have.property('id');
+    expect(response.headers.get(dataFormat)).to.include(jsonDataFormat);
+    expect(response.data).to.have.property(nameProperty, boardName);
+    expect(response.data).to.have.property(idProperty);
   });
 
-  it('повинен отримати дошку', async function() {
+  it('Receiving the board', async function () {
     const response = await getBoard(boardId);
 
     expect(response.status).to.equal(200);
-    expect(response.headers.get('content-type')).to.include('application/json');
-    expect(response.data).to.have.property('id', boardId);
-    expect(response.data).to.have.property('name');
+    expect(response.headers.get(dataFormat)).to.include(jsonDataFormat);
+    expect(response.data).to.have.property(idProperty, boardId);
+    expect(response.data).to.have.property(nameProperty);
   });
 
-  it('повинен оновити дошку', async function() {
-    const response = await updateBoard(boardId, 'Оновлена дошка');
+  it('Updating the board', async function () {
+    const response = await updateBoard(boardId, boardNameUpdated);
 
     expect(response.status).to.equal(200);
-    expect(response.headers.get('content-type')).to.include('application/json');
-    expect(response.data).to.have.property('name', 'Оновлена дошка');
+    expect(response.headers.get(dataFormat)).to.include(jsonDataFormat);
+    expect(response.data).to.have.property(nameProperty, boardNameUpdated);
   });
 
-  it('повинен видалити дошку', async function() {
+  it('Removing the board', async function () {
     const response = await deleteBoard(boardId);
 
     expect(response.status).to.equal(200);
