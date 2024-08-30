@@ -19,7 +19,6 @@ const getBoard = async (boardId) => {
   const url = createUrl(baseUrl, boardId);
   try {
     const response = await axios.get(url, { headers: acceptHeaders });
-    console.log(response.data)
     return { status: response.status, headers: response.headers, data: response.data };
   } catch (error) {
     return { status: error.response?.status || 500, headers: error.response?.headers || {}, data: error.response?.data || {} };
