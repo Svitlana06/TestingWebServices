@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const { createBoard, getBoard, updateBoard, deleteBoard } = require('../services/api');
-const { boardName, boardNameUpdated, dataFormat, jsonDataFormat, nameProperty, idProperty } = require('../config/data');
+const { boardName, boardNameUpdated, dataFormat, jsonDataFormat, nameProperty, idProperty } = require('./data');
 
 describe('Trello Tests API', function () {
   let boardId;
