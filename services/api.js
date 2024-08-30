@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const axios = require('axios');
 const { baseUrl } = require('../config/config');
 const { acceptHeaders, jsonHeaders } = require('../config/headers');
@@ -8,7 +7,7 @@ const { createUrl } = require('./url');
 const createBoard = async (boardName) => {
   const url = createUrl(baseUrl, '', { name: boardName });
   try {
-    const response = await axios.post(url, {}, { headers: jsonHeaders }); 
+    const response = await axios.post(url, { headers: jsonHeaders }); 
     return { status: response.status, headers: response.headers, data: response.data }; 
   } catch (error) {
     return { status: error.response?.status || 500, headers: error.response?.headers || {}, data: error.response?.data || {} };
@@ -20,6 +19,7 @@ const getBoard = async (boardId) => {
   const url = createUrl(baseUrl, boardId);
   try {
     const response = await axios.get(url, { headers: acceptHeaders });
+    console.log(response.data)
     return { status: response.status, headers: response.headers, data: response.data };
   } catch (error) {
     return { status: error.response?.status || 500, headers: error.response?.headers || {}, data: error.response?.data || {} };
@@ -30,7 +30,7 @@ const getBoard = async (boardId) => {
 const updateBoard = async (boardId, boardName) => {
   const url = createUrl(baseUrl, boardId, { name: boardName });
   try {
-    const response = await axios.put(url, {}, { headers: jsonHeaders });
+    const response = await axios.put(url, { headers: jsonHeaders });
     return { status: response.status, headers: response.headers, data: response.data };
   } catch (error) {
     return { status: error.response?.status || 500, headers: error.response?.headers || {}, data: error.response?.data || {} };
