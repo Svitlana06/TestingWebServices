@@ -7,7 +7,7 @@ const createUrl = (baseUrl, boardId = '', queryParams = {}) => {
     token: process.env.TRELLO_TOKEN
   }).toString();
 
-  return query ? `${url}?${query}` : url;
+  return `${url}?${query}`;
 };
 
 module.exports = { createUrl };
