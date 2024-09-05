@@ -33,8 +33,11 @@ describe('Trello Tests API', function () {
   });
 
   it('Removing the board', async function () {
+    this.timeout(5000);
     const response = await deleteBoard(boardId);
-
     expect(response.status).to.equal(200);
+
+    const getResponse = await getBoard(boardId);
+    expect(getResponse.status).to.equal(404);
   });
 });
